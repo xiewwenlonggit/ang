@@ -1,0 +1,161 @@
+<div class="top">
+    <button nz-button nzType="primary" (click)="showModal()">
+          <span>添加级别规则</span>
+        </button>
+    <nz-modal [nzBodyStyle]="{minHeight:'470px'}" [(nzVisible)]="isVisible" nzTitle="员工信息" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+        <div class="bottom">
+            <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+                <nz-form-item>
+                    <nz-form-label [nzXs]="24" [nzSm]="5" nzRequired>岗位名称:</nz-form-label>
+                    <nz-form-control [nzXs]="24" [nzSm]="19">
+                        <nz-select style="width: 150px;" formControlName="selectedPostName" (ngModelChange)="postNameChange($event)">
+                            <nz-option *ngFor="let p of postNameData" [nzValue]="p" [nzLabel]="p"></nz-option>
+                        </nz-select>
+
+                        <nz-form-explain *ngIf="validateForm.get('score')?.dirty && validateForm.get('score')?.errors">
+                            请选择岗位名称
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzXs]="24" [nzSm]="5" nzRequired>岗位级别:</nz-form-label>
+                    <nz-form-control [nzXs]="24" [nzSm]="19">
+                        <nz-select style="width: 150px;" formControlName="selectedRank">
+                            <nz-option *ngFor="let c of newRankData" [nzValue]="c" [nzLabel]="c"></nz-option>
+                        </nz-select>
+
+                        <nz-form-explain *ngIf="validateForm.get('score')?.dirty && validateForm.get('score')?.errors">
+                            请选择岗位级别
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+
+
+                <nz-form-item>
+                    <nz-form-label [nzXs]="24" [nzSm]="5" nzRequired>分数</nz-form-label>
+                    <nz-form-control [nzXs]="24" [nzSm]="19">
+                        <input nz-input style="width: 60%; margin-right:8px;" placeholder="输入分数" formControlName="score" id="score" />
+
+                        <nz-form-explain *ngIf="validateForm.get('score')?.dirty && validateForm.get('score')?.errors">
+                            请输入分数
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzXs]="24" [nzSm]="5" nzRequired>及格分</nz-form-label>
+                    <nz-form-control [nzXs]="24" [nzSm]="19">
+                        <input nz-input style="width: 60%; margin-right:8px;" placeholder="输入分数" formControlName="lowscore" id="lowscore" />
+
+                        <nz-form-explain *ngIf="validateForm.get('lowscore')?.dirty && validateForm.get('lowscore')?.errors">
+                            请输入分数
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item *ngFor="let control of controlArray; let i = index">
+                    <nz-form-label [nzXs]="24" [nzSm]="5" *ngIf="i == 0" [nzFor]="control.controlInstance" nzRequired>规则</nz-form-label>
+                    <nz-form-control [nzXs]="24" [nzSm]="19" [nzOffset]="i == 0 ? 0 : 4">
+                        <textarea nz-input style="width: 60%; margin-right:8px;" placeholder="输入规则" [attr.id]="control.id" [formControlName]="control.controlInstance"></textarea>
+                        <!-- <input nz-input style="width: 60%; margin-right:8px;" placeholder="输入规则" [attr.id]="control.id" [formControlName]="control.controlInstance" /> -->
+                        <i nz-icon type="minus-circle-o" class="dynamic-delete-button" (click)="removeField(control, $event)"></i>
+                        <nz-form-explain *ngIf="
+                getFormControl(control.controlInstance)?.dirty &&
+                getFormControl(control.controlInstance)?.hasError('required')
+              ">
+                            请添加规则
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 20, offset: 4 }">
+                        <button nz-button nzType="dashed" style="width:60%" (click)="addField($event)">
+              <i nz-icon type="plus"></i> 添加新规则
+            </button>
+                    </nz-form-control>
+                </nz-form-item>
+                <!-- <nz-form-item>
+                    <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 20, offset: 4 }">
+                        <button nz-button nzType="primary">提交</button>
+                    </nz-form-control>
+                </nz-form-item> -->
+            </form>
+        </div>
+    </nz-modal>
+</div>
+
+<div class="table">
+    <nz-table #editRowTable nzBordered [nzData]="listData" [nzFrontPagination]="false" [nzFrontPagination]="false" [nzShowPagination]="false" [nzScroll]="scrollConfig">
+        <thead>
+            <tr>
+                <th nzWidth="120px">序号</th>
+                <th nzWidth="180px">岗位名称</th>
+                <th nzWidth="80px">级别数</th>
+                <th nzWidth="80px">分数</th>
+                <th nzWidth="80px">及格分</th>
+                <th nzWidth="360px">级别规则</th>
+                <th nzWidth="300px">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of editRowTable.data;index as i ">
+                <td>
+                    <ng-container>
+                        {{ data.id }}
+                    </ng-container>
+                </td>
+                <td [attr.rowspan]="renderContent(data.id-1)" *ngIf="show(data.id-1)">
+                    <ng-container>
+                        {{ data.postname}}
+                    </ng-container>
+                </td>
+                <td [attr.rowspan]="renderContent(data.id-1)" *ngIf="show(data.id-1)">
+                    <ng-container>
+                        {{ data.rankname}}
+                    </ng-container>
+                </td>
+                <td [attr.rowspan]="renderContent(data.id-1)" *ngIf="show(data.id-1)">
+                    <ng-container *ngIf=" !editCache[data.id].edit; else rankscoreInputTpl ">
+                        {{ data.rankscore }}
+                    </ng-container>
+                    <ng-template #rankscoreInputTpl>
+                        <input type="text " nz-input [(ngModel)]="editCache[data.id].data.rankscore " />
+                    </ng-template>
+                </td>
+                <td [attr.rowspan]="renderContent(data.id-1)" *ngIf="show(data.id-1)">
+                    <ng-container *ngIf=" !editCache[data.id].edit; else lowscoreInputTpl ">
+                        {{ data.lowscore }}
+                    </ng-container>
+                    <ng-template #lowscoreInputTpl>
+                        <input type="text " nz-input [(ngModel)]="editCache[data.id].data.lowscore " />
+                    </ng-template>
+                </td>
+                <td>
+                    <ng-container *ngIf="!editCache[data.id].edit; else rankruleInputTpl ">
+                        {{ data.rankrule}}
+                    </ng-container>
+                    <ng-template #rankruleInputTpl>
+                        <input type="text " nz-input [(ngModel)]="editCache[data.id].data.rankrule " />
+                    </ng-template>
+                </td>
+
+
+
+                <td>
+                    <div class="editable-row-operations ">
+                        <ng-container *ngIf="!editCache[data.id].edit; else saveTpl ">
+                            <a (click)="startEdit(data.id) ">编辑</a>
+                        </ng-container>
+                        <ng-template #saveTpl>
+                            <a (click)="saveEdit(data.id) ">保存</a>
+                            <a nz-popconfirm nzTitle="Sure to cancel? " (nzOnConfirm)="cancelEdit(data.id) ">取消</a>
+                        </ng-template>
+                    </div>
+                    <div class="dele ">
+                        <a nz-popconfirm nzTitle="确定删除么? " (nzOnConfirm)="deleteRow(data.id) ">删除</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+
+</div>

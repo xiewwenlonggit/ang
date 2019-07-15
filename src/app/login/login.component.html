@@ -1,0 +1,55 @@
+<div id="login">
+    <!--背景图片 sta-->
+    <h1 class="bg"></h1>
+    <!--背景 end-->
+    <!-- 系统名称 sta -->
+    <p id='title'>
+        中国擎天软件定岗定级系统
+    </p>
+    <!-- 系统名称 end -->
+    <!--form 表单sta-->
+    <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()" class="form">
+        <!--用户名 sta-->
+        <nz-form-item>
+            <nz-form-control>
+                <nz-input-group [nzPrefix]="prefixuser" class="user">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                    <input formControlName="userName" nz-input placeholder="请输入员工号" nzSize="small" />
+                </nz-input-group>
+                <nz-form-explain *ngIf="validateForm.get('userName')?.dirty && validateForm.get('userName')?.errors">
+                    请输入员工号
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+        <!--用户名 end-->
+        <!--密码 sta-->
+        <nz-form-item>
+            <nz-form-control>
+                <nz-input-group [nzPrefix]="prefixpassword" class="password">
+                    <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                    <div class="passInput">
+                        <nz-input-group [nzSuffix]="suffixTemplate">
+                            <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="请输入密码" formControlName="password" required autocomplete='password' />
+                        </nz-input-group>
+                        <ng-template #suffixTemplate>
+                            <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible" class="eye"></i>
+                        </ng-template>
+                    </div>
+                </nz-input-group>
+                <nz-form-explain *ngIf="validateForm.get('password')?.dirty && validateForm.get('password')?.errors">
+                    请输入密码
+                </nz-form-explain>
+
+            </nz-form-control>
+        </nz-form-item>
+        <!--密码end-->
+        <!--登录 sta-->
+        <nz-form-item>
+            <nz-form-control class="btn">
+                <button nz-button [nzType]="'primary'">登录</button>
+            </nz-form-control>
+        </nz-form-item>
+        <!--登录 end-->
+    </form>
+    <!--form 表单 end-->
+</div>

@@ -1,0 +1,150 @@
+<div class="top">
+    <button nz-button nzType="primary" (click)="showModal()">
+      <span>添加子部门</span>
+    </button>
+    <nz-modal [(nzVisible)]="isVisible" nzTitle="部门信息" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+        <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()" class="deptForm">
+            <nz-form-item>
+                <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired nzFor="bigBossName">部门领导姓名</nz-form-label>
+                <nz-form-control [nzSm]="10" [nzXs]="24">
+                    <nz-input-group [nzPrefix]="prefixLock">
+                        <input formControlName="bigBossName" nz-input placeholder="输入姓名" />
+                    </nz-input-group>
+                    <nz-form-explain *ngIf="validateForm.get('bigBossName')?.dirty && validateForm.get('bigBossName')?.errors">请输入负责人姓名!</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired nzFor="bigBossNo" class="bigBossNoLabel">员工号</nz-form-label>
+                <nz-form-control [nzSm]="10" [nzXs]="24">
+                    <nz-input-group [nzPrefix]="prefixLock">
+                        <nz-select id="bigBossNo" formControlName="selectedBossValue" nzPlaceHolder="选择员工号">
+                            <nz-option *ngFor="let p of optionBossData" [nzValue]="p" [nzLabel]="p"></nz-option>
+                        </nz-select>
+                    </nz-input-group>
+                    <nz-form-explain *ngIf="validateForm.get('bigBossNo')?.dirty && validateForm.get('bigBossNo')?.errors">请输入负责人姓名!</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+
+
+            <nz-form-item>
+                <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired nzFor="deptName">子部门名称</nz-form-label>
+                <nz-form-control [nzSm]="10" [nzXs]="24">
+                    <nz-input-group [nzPrefix]="prefixUser">
+                        <input formControlName="deptName" nz-input placeholder="子部门名称" />
+                    </nz-input-group>
+                    <nz-form-explain *ngIf="validateForm.get('deptName')?.dirty && validateForm.get('deptName')?.errors">请输入子部门名称!</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired nzFor="dutyName">负责人名称</nz-form-label>
+                <nz-form-control [nzSm]="10" [nzXs]="24">
+                    <nz-input-group [nzPrefix]="prefixLock">
+                        <input formControlName="dutyName" nz-input placeholder="负责人姓名" />
+                    </nz-input-group>
+                    <nz-form-explain *ngIf="validateForm.get('dutyName')?.dirty && validateForm.get('dutyName')?.errors">请输入负责人姓名!</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired nzFor="empno" class="empnoLabel">员工号</nz-form-label>
+                <nz-form-control [nzSm]="10" [nzXs]="24">
+                    <nz-input-group [nzPrefix]="prefixLock">
+                        <nz-select id="empno" formControlName="selectedValue" nzPlaceHolder="选择员工号">
+                            <nz-option *ngFor="let p of optionData" [nzValue]="p" [nzLabel]="p"></nz-option>
+                        </nz-select>
+                    </nz-input-group>
+                    <nz-form-explain *ngIf="validateForm.get('empno')?.dirty && validateForm.get('empno')?.errors">请输入负责人姓名!</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <!-- <nz-form-item>
+                <nz-form-control>
+                    <button nz-button nzType="primary" [disabled]="!validateForm.valid">添加</button>
+                </nz-form-control>
+            </nz-form-item> -->
+        </form>
+    </nz-modal>
+</div>
+<nz-table #editRowTable nzBordered [nzData]="deptData" class="tab" [nzFrontPagination]="false" [nzFrontPagination]="false" [nzShowPagination]="false" [nzScroll]="scrollConfig">
+    <thead>
+        <tr>
+            <th nzWidth="5%">序号</th>
+            <th nzWidth="15%">部门领导姓名</th>
+            <th nzWidth="10%">员工号</th>
+            <th nzWidth="15%">子部门名称</th>
+            <th nzWidth="15%">负责人姓名</th>
+            <th nzWidth="10%">员工号</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of editRowTable.data;index as i ">
+            <td>
+                <ng-container>
+                    {{ data.id }}
+                </ng-container>
+
+            </td>
+            <td>
+                <ng-container *ngIf="!editCache[data.id].edit; else bigbossnameInputTpl ">
+                    {{ data.bigbossname}}
+                </ng-container>
+                <ng-template #bigbossnameInputTpl>
+                    <input type="text " nz-input [(ngModel)]="editCache[data.id].data.bigbossname" (ngModelChange)="checkBossName($event)" />
+                </ng-template>
+            </td>
+            <td>
+                <ng-container *ngIf="!editCache[data.id].edit; else bigbossnoInputTpl ">
+                    {{ data.bigbossno}}
+                </ng-container>
+                <ng-template #bigbossnoInputTpl>
+                    <nz-select id="bigbossno" [(ngModel)]="selectedBossValue2" nzPlaceHolder="选择员工号">
+                        <nz-option *ngFor="let p of optionBossData2" [nzValue]="p" [nzLabel]="p"></nz-option>
+                    </nz-select>
+                    <!-- <input type="text " nz-input [(ngModel)]="editCache[data.id].data.empno " /> -->
+                </ng-template>
+            </td>
+            <!-- [attr.rowspan]="renderContent(i)" *ngIf="show(i)" -->
+            <td>
+                <ng-container *ngIf="!editCache[data.id].edit; else deptnameInputTpl ">
+                    {{ data.deptname}}
+                </ng-container>
+                <ng-template #deptnameInputTpl>
+                    <input type="text " nz-input [(ngModel)]="editCache[data.id].data.deptname " />
+                </ng-template>
+            </td>
+            <td>
+                <ng-container *ngIf="!editCache[data.id].edit; else bossnameInputTpl ">
+                    {{ data.bossname}}
+                </ng-container>
+                <ng-template #bossnameInputTpl>
+                    <input type="text " nz-input [(ngModel)]="editCache[data.id].data.bossname" (ngModelChange)="checkName($event)" />
+                </ng-template>
+            </td>
+            <td>
+                <ng-container *ngIf="!editCache[data.id].edit; else empnoInputTpl ">
+                    {{ data.empno}}
+                </ng-container>
+                <ng-template #empnoInputTpl>
+                    <nz-select id="empno" [(ngModel)]="selectedValue2" nzPlaceHolder="选择员工号">
+                        <nz-option *ngFor="let p of optionData2" [nzValue]="p" [nzLabel]="p"></nz-option>
+                    </nz-select>
+                </ng-template>
+            </td>
+
+
+            <td>
+                <div class="editable-row-operations ">
+                    <ng-container *ngIf="!editCache[data.id].edit; else saveTpl ">
+                        <a (click)="startEdit(data.id) " nzType="primary">编辑</a>
+                    </ng-container>
+                    <ng-template #saveTpl>
+                        <a (click)="saveEdit(data.id) ">保存</a>
+                        <a nz-popconfirm nzTitle="Sure to cancel? " (nzOnConfirm)="cancelEdit(data.id) ">取消</a>
+                    </ng-template>
+                </div>
+                <div class="dele">
+                    <a nz-popconfirm nzTitle="确定删除么? " (nzOnConfirm)="deleteRow(data.id) " nzType="danger">删除</a>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>

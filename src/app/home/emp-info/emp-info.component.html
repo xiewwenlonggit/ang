@@ -1,0 +1,147 @@
+<div id="empInfo">
+    <div class="top">
+        <button nz-button nzType="primary" (click)="showModal()">
+          <span>添加员工信息</span>
+        </button>
+        <nz-modal [(nzVisible)]="isVisible" nzTitle="员工信息" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+            <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="empname">姓名</nz-form-label>
+                    <nz-form-control [nzSm]="9" [nzXs]="24">
+                        <input nz-input formControlName="empname" id="empname" />
+                        <nz-form-explain *ngIf="validateForm.get('empname')?.dirty && validateForm.get('empname')?.errors">
+                            请输入员工姓名
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="empno">员工号</nz-form-label>
+                    <nz-form-control [nzSm]="9" [nzXs]="24">
+                        <input nz-input formControlName="empno" id="empno" />
+                        <nz-form-explain *ngIf="validateForm.get('empno')?.dirty && validateForm.get('empno')?.errors">
+                            请输入员工号
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="entrytime">入职时间</nz-form-label>
+                    <nz-form-control [nzSm]="9" [nzXs]="24">
+                        <!-- <input nz-input formControlName="entrytime" id="entrytime" /> -->
+                        <nz-date-picker formControlName="entrytime" id="entrytime"></nz-date-picker>
+                        <nz-form-explain *ngIf="validateForm.get('entrytime')?.dirty && validateForm.get('entrytime')?.errors">
+                            请选择入职时间
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="telephone">手机号码</nz-form-label>
+                    <nz-form-control [nzSm]="9" [nzXs]="24">
+                        <input nz-input formControlName="telephone" id="telephone" />
+                        <nz-form-explain *ngIf="validateForm.get('telephone')?.dirty && validateForm.get('telephone')?.errors">
+                            请输入正确手机号码
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="email">邮箱</nz-form-label>
+                    <nz-form-control [nzSm]="9" [nzXs]="24">
+                        <input nz-input formControlName="email" id="email" />
+                        <nz-form-explain *ngIf="validateForm.get('email')?.dirty && validateForm.get('email')?.errors">
+                            请输入正确的邮箱地址
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </nz-modal>
+    </div>
+    <nz-table #nzTable nzBordered [nzData]="listOfData">
+        <thead>
+            <tr>
+                <th nzWidth="5%">序号</th>
+                <th nzCustomFilter nzWidth="10%">
+                    姓名
+                    <nz-dropdown nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter #dropdown>
+                        <i nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown.nzVisible" nz-dropdown></i>
+                        <div class="search-box">
+                            <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
+                            <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+              查询
+            </button>
+                            <button nz-button nzSize="small" (click)="reset()">Reset</button>
+                        </div>
+                    </nz-dropdown>
+                </th>
+                <th nzWidth="10%">员工号</th>
+                <th nzWidth="18%">入职时间</th>
+                <th nzWidth="18%">手机号码</th>
+                <th nzWidth="18%">邮箱</th>
+                <th>操作</th>
+                <!-- <th nzShowFilter [nzFilters]="listOfFilterAddress" (nzFilterChange)="filterAddressChange($event)">Address</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of nzTable.data">
+                <td>
+                    <ng-container>
+                        {{data.id}}
+                    </ng-container>
+                </td>
+                <td>
+                    <ng-container *ngIf=" !editCache[data.id].edit; else empnameInputTpl ">
+                        {{ data.empname }}
+                    </ng-container>
+                    <ng-template #empnameInputTpl>
+                        <input type="text " nz-input [(ngModel)]="editCache[data.id].data.empname" />
+                    </ng-template>
+                </td>
+                <td>
+                    <ng-container *ngIf=" !editCache[data.id].edit; else empnoInputTpl ">
+                        {{ data.empno }}
+                    </ng-container>
+                    <ng-template #empnoInputTpl>
+                        <input type="text " nz-input [(ngModel)]="editCache[data.id].data.empno " />
+                    </ng-template>
+                </td>
+                <td>
+                    <ng-container *ngIf=" !editCache[data.id].edit; else entrytimeInputTpl ">
+                        {{ data.entrytime }}
+                    </ng-container>
+                    <ng-template #entrytimeInputTpl>
+                        <input type="text " nz-input [(ngModel)]="editCache[data.id].data.entrytime" />
+                    </ng-template>
+                </td>
+                <td>
+                    <ng-container *ngIf=" !editCache[data.id].edit; else telephoneInputTpl ">
+                        {{ data.telephone }}
+                    </ng-container>
+                    <ng-template #telephoneInputTpl>
+                        <input type="text " nz-input [(ngModel)]="editCache[data.id].data.telephone" />
+                    </ng-template>
+                </td>
+                <td>
+                    <ng-container *ngIf=" !editCache[data.id].edit; else emailInputTpl ">
+                        {{ data.email }}
+                    </ng-container>
+                    <ng-template #emailInputTpl>
+                        <input type="text " nz-input [(ngModel)]="editCache[data.id].data.email" />
+                    </ng-template>
+                </td>
+
+                <td>
+                    <div class="editable-row-operations ">
+                        <ng-container *ngIf="!editCache[data.id].edit; else saveTpl ">
+                            <a (click)="startEdit(data.id) ">编辑</a>
+                        </ng-container>
+                        <ng-template #saveTpl>
+                            <a (click)="saveEdit(data.id) ">保存</a>
+                            <a nz-popconfirm nzTitle="Sure to cancel? " (nzOnConfirm)="cancelEdit(data.id) ">取消</a>
+                        </ng-template>
+                    </div>
+                    <div class="dele ">
+                        <a nz-popconfirm nzTitle="确定删除么? " (nzOnConfirm)="deleteRow(data.id) ">删除</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>

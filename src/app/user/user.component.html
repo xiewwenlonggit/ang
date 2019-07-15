@@ -1,0 +1,43 @@
+<nz-layout class="layout">
+    <nz-header>
+        <div class="logo"></div>
+        <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;">
+            <li nz-menu-item>评价管理</li>
+            <li nz-menu-item>历史评分记录</li>
+            <li nz-menu-item>账号管理</li>
+        </ul>
+    </nz-header>
+    <nz-layout>
+        <nz-sider [nzWidth]="200" style="background:#fff">
+            <ul nz-menu [nzMode]="'inline'" style="height:100%">
+                <li nz-menu-item class="showBtn">
+                    <span title><i nz-icon type="user" ></i>自我评价</span>
+                </li>
+                <li nz-menu-item class="showBtn">
+                    <span title><i nz-icon type="user"></i>评价他人</span>
+                </li>
+                <li nz-submenu>
+                    <span title><i nz-icon type="notification"></i>subnav 3</span>
+                    <ul>
+                        <li nz-menu-item>option9</li>
+                        <li nz-menu-item>option10</li>
+                        <li nz-menu-item>option11</li>
+                        <li nz-menu-item>option12</li>
+                    </ul>
+                </li>
+            </ul>
+        </nz-sider>
+        <nz-layout style="padding:0 24px 24px">
+            <nz-breadcrumb style="margin:16px 0;">
+                <nz-breadcrumb-item>Home</nz-breadcrumb-item>
+                <nz-breadcrumb-item>List</nz-breadcrumb-item>
+                <nz-breadcrumb-item>App</nz-breadcrumb-item>
+            </nz-breadcrumb>
+            <nz-content style="background:#fff; padding: 24px; min-height:580px;">
+                <router-outlet></router-outlet>
+                <app-self-comment [data]='data' style="display:block" class="page"></app-self-comment>
+                <app-other-comment [data]='data' style="display:none" class="page"></app-other-comment>
+            </nz-content>
+        </nz-layout>
+    </nz-layout>
+</nz-layout>

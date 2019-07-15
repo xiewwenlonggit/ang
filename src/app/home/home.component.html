@@ -1,0 +1,73 @@
+<nz-layout class="layout">
+    <nz-header>
+        <div class="logo"></div>
+        <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height:74px;">
+            <li nz-menu-item>后台管理</li>
+            <li nz-menu-item (click)='goUser()'>员工页面</li>
+            <li nz-submenu>
+                <span title>账号管理</span>
+                <ul class='count'>
+                    <li nz-menu-item (click)='destory()'>退出登录</li>
+                    <li nz-menu-item (click)='checkCount()'>修改密码</li>
+                </ul>
+            </li>
+        </ul>
+    </nz-header>
+    <nz-content style="padding:0 50px;">
+        <nz-breadcrumb style="margin:16px 0;">
+            <nz-breadcrumb-item>Home</nz-breadcrumb-item>
+            <nz-breadcrumb-item>List</nz-breadcrumb-item>
+            <nz-breadcrumb-item>App</nz-breadcrumb-item>
+        </nz-breadcrumb>
+        <nz-layout style="padding: 0; background: #fff">
+            <nz-sider [nzWidth]="200" style="background:#fff">
+                <ul nz-menu [nzMode]="'inline'" style="height:400px" [nzTheme]="'dark'">
+                    <li nz-submenu>
+                        <span title><i nz-icon type="user"></i>岗位配置管理</span>
+                        <ul>
+                            <li nz-menu-item class="showBtn">岗位信息管理</li>
+                            <li nz-menu-item class="showBtn">级别规则管理</li>
+                        </ul>
+                    </li>
+                    <li nz-menu-item class="showBtn">
+                        <span title><i nz-icon type="laptop"></i>人员信息管理</span>
+                    </li>
+                    <li nz-menu-item class="showBtn">
+                        <span title><i nz-icon type="notification"></i>部门管理</span>
+                    </li>
+                    <li nz-submenu>
+                        <span title><i nz-icon type="user"></i>项目管理</span>
+                        <ul>
+                            <li nz-menu-item class="showBtn">项目信息管理</li>
+
+                            <li nz-menu-item class="showBtn">项目成员管理</li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </nz-sider>
+            <nz-content style="padding: 0 24px; min-height: 780px;">
+                <app-post-info style="display:block" class="page"></app-post-info>
+                <app-level-rule style="display:none" class="page"></app-level-rule>
+                <app-emp-info style="display:none" class="page"></app-emp-info>
+                <app-dept style="display:none" class="page"></app-dept>
+                <app-pm-info style="display:none" class="page"></app-pm-info>
+                <app-pm-people style="display:none" class="page"></app-pm-people>
+            </nz-content>
+        </nz-layout>
+        <nz-footer style="text-align: center; ">
+            <div class="main-cont">
+                <div class="footer-brain" style="text-align:left">国内注册商标： 擎天 | skytech | QingTian | 擎天天商 | 擎天天博 | 擎天天铠 | 擎天天甲 | 擎天天盾 | 擎天天易 | 擎天天行 | </div>
+                <div class="footer-brain" style="text-align:left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;擎天天云 | 擎天全税通 | 擎天科技 | 天税</div>
+
+                <div class="footer-brain" style="text-align:left">涉外注册商标： sinosoft technology（香港） | sinosoft technology（台湾） | 擎天（香港） | skytech </div>
+                <div class="footer-brain" style="text-align:left">注释："擎天"为擎天集团注册商标</div>
+                <div class="footer-calc">
+                    <font id="site_hitCount" style="display:none">257438</font>
+                </div>
+                <br class="clearFix">
+            </div>
+
+        </nz-footer>
+    </nz-content>
+</nz-layout>

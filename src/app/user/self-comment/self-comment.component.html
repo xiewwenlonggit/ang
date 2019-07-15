@@ -1,0 +1,74 @@
+<div class="top">
+    <label>选择岗位:</label>
+    <nz-select style="width: 140px;margin-right:10px" nzShowSearch nzAllowClear nzPlaceHolder="选择一个岗位" [(ngModel)]="selectedValue">
+        <nz-option *ngFor="let p of postData" [nzValue]="p" [nzLabel]="p"></nz-option> -->
+    </nz-select>
+    <button nz-button [nzSize]="size" nzType="primary" (click)="getRules()">确认</button>
+    <button nz-button [nzSize]="size" nzType="primary" (click)="commitScore()" style="margin-left:600px;margin-right:50px;">提交自我评分</button>
+
+</div>
+
+<nz-table #editRowTable nzBordered [nzData]="listData" [nzFrontPagination]="false" [nzFrontPagination]="false" [nzShowPagination]="false" [nzScroll]="scrollConfig">
+    <thead>
+        <tr>
+            <th nzWidth="80px">序号</th>
+            <th nzWidth="80px">级别</th>
+            <th nzWidth="200px">评分细则</th>
+            <th nzWidth="280px">评分规则</th>
+            <th nzWidth="120px">评分</th>
+            <th nzWidth="90px">平均分</th>
+            <th nzWidth="280px">备注</th>
+            <th nzWidth="200px">上传附件</th>
+            <!-- <th nzWidth="280px">操作</th> -->
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of editRowTable.data;index as i ">
+            <td>
+                <ng-container>
+                    {{ i+1}}
+                </ng-container>
+            </td>
+            <td [attr.rowspan]="renderContent(data.id-1)" *ngIf="show(data.id-1)">
+                <ng-container>
+                    {{ data.rankname}}
+                </ng-container>
+            </td>
+            <td [attr.rowspan]="renderContent(data.id-1)" *ngIf="show(data.id-1)">
+                <ng-container>
+                    {{ data.rankscore}}
+                </ng-container>
+            </td>
+            <td>
+                <ng-container>
+                    {{ data.rankrule }}
+                </ng-container>
+            </td>
+            <td>
+                <ng-container *ngIf="!editCache[data.id].edit;">
+                    <nz-input-number [nzMin]="0" [nzMax]="data.score" [nzStep]="1" [nzPrecision]="1" [(ngModel)]='editCache[data.id].data.remind' (ngModelChange)='getAvg()'></nz-input-number>
+                </ng-container>
+            </td>
+            <td [attr.rowspan]="renderContent(data.id-1)" *ngIf="show(data.id-1)">
+                <ng-container>
+                    {{avgScore}}
+                </ng-container>
+            </td>
+            <td>
+                <ng-container>
+                    <textarea rows="2" nz-input [(ngModel)]="editCache[data.id].data.remark" maxlength="50" placeholder="50字符以内，可不填写"></textarea>
+                </ng-container>
+
+            </td>
+            <td class="file">
+                <ng-container *ngIf="!editCache[data.id].edit;">
+                    <nz-upload nzAction="http://172.20.10.2:8080/posts/" [nzFileList]="editCache[data.id].data.fileName" [nzLimit]="1" [nzFilter]="filters" [nzRemove]="remove" [nzData]='uploadData' (nzChange)="handleChange($event,data.id)">
+                        <button nz-button (click)='upData(data.id)'><i nz-icon nzType="upload"></i><span>Upload</span></button>
+                    </nz-upload>
+                    <button nz-button nzType="danger" (click)='dele(data.id)' *ngIf="editCache[data.id].data.fileName.length>0">移除</button>
+                </ng-container>
+            </td>
+
+        </tr>
+    </tbody>
+</nz-table>

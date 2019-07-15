@@ -1,0 +1,33 @@
+#login h1.bg {
+    width: 100%;
+    height: 100vh;
+    background-image: url("../../assets/image/checkbg.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#login .form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -176px;
+    margin-top: -150px;
+    width: 355px;
+    height: 300px;
+    background-color: #2f4e5e;
+}
+
+[nz-form] {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    padding-top: 36px;
+    margin-left: -300px;
+    margin-top: -200px;
+    min-width: 500px;
+    background: rgb(5, 71, 87);
+}
+
+button {
+    margin-left: 8px;
+}

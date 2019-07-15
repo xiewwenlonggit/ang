@@ -1,0 +1,144 @@
+<div class="top">
+    <button nz-button nzType="primary" (click)="showModal()">
+    <span>添加项目信息</span>
+  </button>
+    <nz-modal [(nzVisible)]="isVisible" nzTitle="项目信息" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+        <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="itemname">项目名</nz-form-label>
+                <nz-form-control [nzSm]="9" [nzXs]="24">
+                    <input nz-input formControlName="itemname" id="itemname" />
+                    <nz-form-explain *ngIf="validateForm.get('itemname')?.dirty && validateForm.get('itemname')?.errors">
+                        请输入项目名称
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="itemdept">所属子部门</nz-form-label>
+                <nz-form-control [nzSm]="9" [nzXs]="24">
+                    <!-- <input nz-input formControlName="itemdept" id="itemdept" /> -->
+                    <nz-select id="itemdept" formControlName="selectedDept" nzPlaceHolder="选择部门">
+                        <nz-option *ngFor="let p of optionDeptData" [nzValue]="p" [nzLabel]="p"></nz-option>
+                    </nz-select>
+                    <nz-form-explain *ngIf="validateForm.get('itemdept')?.dirty && validateForm.get('itemdept')?.errors">
+                        请输入项目所属子部门
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="itemlead">项目负责人</nz-form-label>
+                <nz-form-control [nzSm]="9" [nzXs]="24">
+                    <input nz-input formControlName="itemlead" id="itemlead" />
+                    <nz-form-explain *ngIf="validateForm.get('itemlead')?.dirty && validateForm.get('itemlead')?.errors">
+                        请输入项目负责人
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="empno">员工号</nz-form-label>
+                <nz-form-control [nzSm]="9" [nzXs]="24">
+                    <nz-select id="empno" formControlName="selectedValue" nzPlaceHolder="选择员工号">
+                        <nz-option *ngFor="let p of optionData" [nzValue]="p" [nzLabel]="p"></nz-option>
+                    </nz-select>
+                    <nz-form-explain *ngIf="validateForm.get('empno')?.dirty && validateForm.get('empno')?.errors">
+                        选择员工号
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="itemdescribe">项目描述</nz-form-label>
+                <nz-form-control [nzSm]="9" [nzXs]="24">
+                    <textarea rows="4" nz-input formControlName="itemdescribe" id="itemdescribe" maxlength="50" placeholder="50个字符以内"></textarea>
+                    <!-- <input nz-input formControlName="itemdescribe" id="itemdescribe" /> -->
+                    <nz-form-explain *ngIf="validateForm.get('itemdescribe')?.dirty && validateForm.get('itemdescribe')?.errors">
+                        请输入项目描述
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-modal>
+</div>
+<nz-table #editRowTable nzBordered [nzData]="listData">
+    <thead>
+        <tr>
+            <th nzWidth="120px">序号</th>
+            <th nzWidth="180px">项目名称</th>
+            <th nzWidth="120px">所属子部门</th>
+            <th nzWidth="120px">项目负责人</th>
+            <th nzWidth="120px">员工号</th>
+            <th nzWidth="360px">项目描述</th>
+            <th nzWidth="300px">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of editRowTable.data;index as i ">
+            <td>
+                <ng-container>
+                    {{ data.id }}
+                </ng-container>
+            </td>
+            <td>
+                <ng-container *ngIf="!editCache[data.id].edit; else itemnameInputTpl ">
+                    {{ data.itemname}}
+                </ng-container>
+                <ng-template #itemnameInputTpl>
+                    <input type="text " nz-input [(ngModel)]="editCache[data.id].data.itemname " />
+                </ng-template>
+            </td>
+            <td>
+                <ng-container *ngIf="!editCache[data.id].edit; else itemdeptInputTpl ">
+                    {{ data.itemdept}}
+                </ng-container>
+                <ng-template #itemdeptInputTpl>
+                    <nz-select id="itemdept" [(ngModel)]="editCache[data.id].data.itemdept" nzPlaceHolder="选择部门">
+                        <nz-option *ngFor="let p of optionDeptData" [nzValue]="p" [nzLabel]="p"></nz-option>
+                    </nz-select>
+                </ng-template>
+            </td>
+            <td>
+                <ng-container *ngIf=" !editCache[data.id].edit; else empnameInputTpl ">
+                    {{ data.empname }}
+                </ng-container>
+                <ng-template #empnameInputTpl>
+                    <input type="text " nz-input [(ngModel)]="editCache[data.id].data.empname " (ngModelChange)="checkName($event)" />
+                </ng-template>
+            </td>
+            <td>
+                <ng-container *ngIf=" !editCache[data.id].edit; else empnoInputTpl ">
+                    {{ data.empno }}
+                </ng-container>
+                <ng-template #empnoInputTpl>
+
+                    <nz-select id="empno" [(ngModel)]="selectedValue2" nzPlaceHolder="选择员工号">
+                        <nz-option *ngFor="let p of optionData2" [nzValue]="p" [nzLabel]="p"></nz-option>
+                    </nz-select>
+                </ng-template>
+            </td>
+            <td>
+                <ng-container *ngIf=" !editCache[data.id].edit; else itemdescribeInputTpl ">
+                    {{ data.itemdescribe}}
+                </ng-container>
+                <ng-template #itemdescribeInputTpl>
+                    <input type="text " nz-input [(ngModel)]="editCache[data.id].data.itemdescribe " />
+                </ng-template>
+            </td>
+
+
+
+            <td>
+                <div class="editable-row-operations ">
+                    <ng-container *ngIf="!editCache[data.id].edit; else saveTpl ">
+                        <a (click)="startEdit(data.id) ">编辑</a>
+                    </ng-container>
+                    <ng-template #saveTpl>
+                        <a (click)="saveEdit(data.id) ">保存</a>
+                        <a nz-popconfirm nzTitle="Sure to cancel? " (nzOnConfirm)="cancelEdit(data.id) ">取消</a>
+                    </ng-template>
+                </div>
+                <div class="dele ">
+                    <a nz-popconfirm nzTitle="确定删除么? " (nzOnConfirm)="deleteRow(data.id) ">删除</a>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>

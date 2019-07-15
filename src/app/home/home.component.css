@@ -1,0 +1,27 @@
+ .ant-layout-header {
+     height: 74px;
+ }
+ 
+ .logo {
+     width: 231px;
+     height: 74px;
+     background: rgba(255, 255, 255, 0.2);
+     float: left;
+     background-image: url(.../../../../assets/image/logo.png);
+     background-repeat: no-repeat;
+ }
+ 
+ .count {
+     position: absolute;
+     top: -8px;
+     background: rgb(0, 0, 0);
+ }
+ 
+ .count li {
+     cursor: pointer;
+ }
+ 
+ .main-cont {
+     width: 950px;
+     margin: 0 auto;
+ }

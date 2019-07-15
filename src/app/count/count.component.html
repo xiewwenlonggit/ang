@@ -1,0 +1,66 @@
+<div id="login">
+    <!--背景图片 sta-->
+    <h1 class="bg"></h1>
+    <!--背景 end-->
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm($event, validateForm.value)">
+        <!-- <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>用户名</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <input nz-input formControlName="userName" />
+                <nz-form-explain *ngIf="
+            (validateForm.get('userName')?.dirty && validateForm.get('userName')?.errors) ||
+            validateForm.get('userName')?.pending
+          ">
+                    <ng-container *ngIf="validateForm.get('userName')?.hasError('required')">
+                        请输入你的用户名
+                    </ng-container>
+                    <ng-container *ngIf="validateForm.get('userName')?.hasError('duplicated')">
+                        用户名过长
+                    </ng-container>
+                    <ng-container *ngIf="validateForm.get('userName')?.pending">
+                        验证中...
+                    </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item> -->
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>旧密码</nz-form-label>
+            <div>
+                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                    <input nz-input type="password" formControlName="oldpassword" />
+                    <nz-form-explain *ngIf="validateForm.get('oldpassword')?.dirty && validateForm.get('oldpassword')?.hasError('required')">请输入你的旧密码！</nz-form-explain>
+                </nz-form-control>
+            </div>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>密码</nz-form-label>
+            <div>
+                <nz-form-control [nzSpan]="12" nzHasFeedback>
+                    <input nz-input type="password" formControlName="password" (ngModelChange)="validateConfirmPassword()" />
+                    <nz-form-explain *ngIf="validateForm.get('password')?.dirty && validateForm.get('password')?.hasError('required')">请输入你的密码</nz-form-explain>
+                </nz-form-control>
+            </div>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>确认密码</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <input nz-input type="password" formControlName="confirm" />
+                <nz-form-explain *ngIf="validateForm.get('confirm')?.dirty && validateForm.get('confirm')?.errors">
+                    <ng-container *ngIf="validateForm.get('confirm')?.hasError('required')">
+                        请确认你的密码
+                    </ng-container>
+                    <ng-container *ngIf="validateForm.get('confirm')?.hasError('confirm')">
+                        密码不一致
+                    </ng-container>
+                </nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-control [nzOffset]="7" [nzSpan]="12">
+                <button nz-button nzType="primary" [disabled]="!validateForm.valid">确认修改</button>
+                <button nz-button (click)="resetForm($event)">重置</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</div>

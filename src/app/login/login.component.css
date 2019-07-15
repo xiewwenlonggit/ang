@@ -1,0 +1,75 @@
+#login h1.bg {
+    width: 100%;
+    height: 100vh;
+    background-image: url("../../assets/image/loginBg.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#login #title {
+    position: absolute;
+    letter-spacing: 2px;
+    left: 30%;
+    top: 16%;
+    font-size: 60px;
+    font-weight: bolder;
+    color: rgb(199, 181, 131);
+}
+
+#login .form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -176px;
+    margin-top: -150px;
+    width: 355px;
+    height: 300px;
+    background-color: #2f4e5e;
+}
+
+#login .form .user {
+    margin-top: 80px;
+    margin-bottom: 10px;
+}
+
+#login .form .password {
+    height: 40px;
+}
+
+#login .form .user i,
+#login .form .password i {
+    font-size: 30px;
+    color: #767e83;
+    margin-left: 40px;
+    margin-right: 10px;
+    float: left;
+}
+
+#login .form .password .passInput {
+    float: left;
+}
+
+#login .form .password i.eye {
+    cursor: pointer;
+}
+
+#login .form .ant-input {
+    width: 200px;
+    height: 34px;
+    margin: 0 8px 8px 0;
+}
+
+#login .form .btn {
+    position: relative;
+}
+
+#login .form .btn button {
+    left: 110px;
+    width: 120px;
+    background-color: #767e83;
+    border-color: #767e83;
+}
+
+#login .form nz-form-explain {
+    text-align: center;
+}

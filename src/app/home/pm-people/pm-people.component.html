@@ -1,0 +1,154 @@
+<div class="top">
+    <button nz-button nzType="primary" (click)="showModal()">
+    <span>添加项目成员</span>
+  </button>
+    <nz-modal [(nzVisible)]="isVisible" nzTitle="项目信息" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+        <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="itemname">项目名</nz-form-label>
+                <nz-form-control [nzSm]="9" [nzXs]="24">
+                    <nz-select id="itemdept" formControlName="selectedItemName" nzPlaceHolder="选择项目" nzShowSearch nzAllowClear>
+                        <nz-option *ngFor="let p of optionItemData" [nzValue]="p" [nzLabel]="p"></nz-option>
+                    </nz-select>
+
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="groupname">项目组名称</nz-form-label>
+                <nz-form-control [nzSm]="9" [nzXs]="24">
+                    <input nz-input formControlName="groupname" id="groupname" placeholder="例如项目组一" />
+                    <nz-form-explain *ngIf="validateForm.get('groupname')?.dirty && validateForm.get('groupname')?.errors">
+                        请输入项目组名称
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="groupleadname">组长</nz-form-label>
+                <nz-form-control [nzSm]="9" [nzXs]="24">
+                    <input nz-input formControlName="groupleadname" id="groupleadname" placeholder="输入组长姓名" (ngModelChange)="checkGroupName($event)" />
+                    <nz-form-explain *ngIf="validateForm.get('groupleadname')?.dirty && validateForm.get('groupleadname')?.errors">
+                        请输入组长名称
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="groupleadno">组长员工号</nz-form-label>
+                <nz-form-control [nzSm]="9" [nzXs]="24">
+                    <nz-select id="groupleadno" formControlName="selectedgroup" nzPlaceHolder="选择员工号">
+                        <nz-option *ngFor="let p of optionData" [nzValue]="p" [nzLabel]="p"></nz-option>
+                    </nz-select>
+
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item *ngFor="let control of controlArray; let i = index" style="margin-left: 44px;">
+                <nz-form-label [nzXs]="24" [nzSm]="4" *ngIf="i == 0" [nzFor]="control.controlInstance" nzRequired>添加组员</nz-form-label>
+                <nz-form-control [nzXs]="24" [nzSm]="20" [nzOffset]="i == 0 ? 0 : 4" style="width:30%">
+                    <input nz-input style="width:90%; margin-right:8px; margin-left: 4px" placeholder="小组成员姓名" [attr.id]="control.id" [formControlName]="control.controlInstance" (ngModelChange)="checkName($event,control.id)" />
+                </nz-form-control>
+                <nz-form-control [nzXs]="24" [nzSm]="20" [nzOffset]="i == 0 ? 0 : 4" style="width:32% ;margin-left:0;">
+                    <nz-select [formControlName]="control.controlInstance" nzPlaceHolder="选择员工号" style="width:80%; margin-right:8px; margin-left: 4px">
+                        <nz-option *ngFor="let p of optionNoData" [nzValue]="p" [nzLabel]="p"></nz-option>
+                    </nz-select>
+                    <!-- <input nz-input style="width:50%; margin-right:8px; margin-left: 4px" placeholder="选择员工号" [attr.id]="control.id" [formControlName]="control.controlInstance" /> -->
+                </nz-form-control>
+                <i nz-icon type="minus-circle-o" class="dynamic-delete-button" (click)="removeField(control, $event)" style="width:34px;height: 34px;"></i>
+
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 20, offset: 4 }">
+                    <button nz-button nzType="dashed" style="width:60%" (click)="addField($event)">
+                    <i nz-icon type="plus"></i> 添加组员
+                  </button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-modal>
+</div>
+<nz-table #editRowTable nzBordered [nzData]="listData" [nzFrontPagination]="false" [nzFrontPagination]="false" [nzShowPagination]="false" [nzScroll]="scrollConfig">
+    <thead>
+        <tr>
+            <th nzWidth="100px">序号</th>
+            <th nzWidth="160px">项目名称</th>
+            <th nzWidth="150px">项目组名称</th>
+            <th nzWidth="150px">组长</th>
+            <th nzWidth="150px">组长员工号</th>
+            <th nzWidth="180px">组员</th>
+            <th nzWidth="150px">组员员工号</th>
+            <th nzWidth="240px">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of editRowTable.data;index as i ">
+            <td>
+                <ng-container>
+                    {{ data.id }}
+                </ng-container>
+            </td>
+            <td [attr.rowspan]="renderContent(data.id-1)" *ngIf="show(data.id-1)">
+                <ng-container>
+                    {{ data.itemname}}
+                </ng-container>
+            </td>
+            <td [attr.rowspan]="renderContent(data.id-1)" *ngIf="show(data.id-1)">
+                <ng-container *ngIf="!editCache[data.id].edit; else groupnameInputTpl ">
+                    {{ data.groupname}}
+                </ng-container>
+                <ng-template #groupnameInputTpl>
+                    <input type="text " nz-input [(ngModel)]="editCache[data.id].data.groupname" />
+                </ng-template>
+            </td>
+            <td [attr.rowspan]="renderContent(data.id-1)" *ngIf="show(data.id-1)">
+                <ng-container *ngIf="!editCache[data.id].edit; else groupleadnameInputTpl ">
+                    {{ data.groupleadname}}
+                </ng-container>
+                <ng-template #groupleadnameInputTpl>
+                    <input type="text " nz-input [(ngModel)]="editCache[data.id].data.groupleadname" (ngModelChange)="checkLeadName($event)" />
+                </ng-template>
+            </td>
+            <td [attr.rowspan]="renderContent(data.id-1)" *ngIf="show(data.id-1)">
+                <ng-container *ngIf=" !editCache[data.id].edit; else groupleadnoInputTpl ">
+                    {{ data.groupleadno}}
+                </ng-container>
+                <ng-template #groupleadnoInputTpl>
+                    <nz-select id="groupleadno" [(ngModel)]="selectedLeadno" nzPlaceHolder="选择部门" style="width: 100px">
+                        <nz-option *ngFor="let p of optionLeadData" [nzValue]="p" [nzLabel]="p"></nz-option>
+                    </nz-select>
+                </ng-template>
+            </td>
+            <td>
+                <ng-container *ngIf="!editCache[data.id].edit; else empnameInputTpl ">
+                    {{ data.empname}}
+                </ng-container>
+                <ng-template #empnameInputTpl>
+                    <input type="text " nz-input [(ngModel)]="editCache[data.id].data.empname" (ngModelChange)="checkEmpName($event)" />
+                </ng-template>
+            </td>
+            <td>
+                <ng-container *ngIf=" !editCache[data.id].edit; else empnoInputTpl ">
+                    {{ data.empno }}
+                </ng-container>
+                <ng-template #empnoInputTpl>
+                    <nz-select id="empno" [(ngModel)]="selectedEmpValue" nzPlaceHolder="选择员工号">
+                        <nz-option *ngFor="let p of optionEmpData" [nzValue]="p" [nzLabel]="p"></nz-option>
+                    </nz-select>
+                </ng-template>
+            </td>
+
+            <td>
+                <div class="editable-row-operations ">
+                    <ng-container *ngIf="!editCache[data.id].edit; else saveTpl ">
+                        <a (click)="startEdit(data.id) ">编辑</a>
+                    </ng-container>
+                    <ng-template #saveTpl>
+                        <a (click)="saveEdit(data.id) ">保存</a>
+                        <a nz-popconfirm nzTitle="Sure to cancel? " (nzOnConfirm)="cancelEdit(data.id) ">取消</a>
+                    </ng-template>
+                </div>
+                <div class="dele ">
+                    <a nz-popconfirm nzTitle="确定删除么? " (nzOnConfirm)="deleteRow(data.id) ">删除</a>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>

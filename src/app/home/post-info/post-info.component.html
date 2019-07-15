@@ -1,0 +1,121 @@
+<div id="post">
+    <div class="top">
+        <button nz-button nzType="primary" (click)="showModal()">
+                  <span>添加岗位信息</span>
+                </button>
+        <nz-modal [(nzVisible)]="isVisible" nzTitle="岗位信息" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+            <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="empno">员工号</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <nz-input-group [nzPrefix]="prefixpost">
+                            <input formControlName="postName" nz-input placeholder="岗位名称" />
+                        </nz-input-group>
+                        <nz-form-explain *ngIf="validateForm.get('postName')?.dirty && validateForm.get('postName')?.errors">请输入岗位名称</nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="empno">员工号</nz-form-label>
+
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <nz-input-group [nzPrefix]="prefixLock">
+                            <input formControlName="rank" nz-input placeholder="级别数" att-numberonly [scale]='0' />
+                        </nz-input-group>
+                        <nz-form-explain *ngIf="validateForm.get('rank')?.dirty && validateForm.get('rank')?.errors">请输入级别数!</nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+                <!-- <nz-form-item>
+                    <nz-form-control>
+                        <button nz-button nzType="primary" [disabled]="!validateForm.valid">添加</button>
+                    </nz-form-control>
+                </nz-form-item> -->
+            </form>
+        </nz-modal>
+    </div>
+    <!-- <div class="add">
+
+        <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+            <nz-form-item>
+                <nz-form-control>
+                    <nz-input-group [nzPrefix]="prefixpost">
+                        <input formControlName="postName" nz-input placeholder="岗位名称" />
+                    </nz-input-group>
+                    <nz-form-explain *ngIf="validateForm.get('postName')?.dirty && validateForm.get('postName')?.errors">请输入岗位名称</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control>
+                    <nz-input-group [nzPrefix]="prefixLock">
+                        <input formControlName="rank" nz-input placeholder="级别数" att-numberonly [scale]='0' />
+                    </nz-input-group>
+                    <nz-form-explain *ngIf="validateForm.get('rank')?.dirty && validateForm.get('rank')?.errors">请输入级别数!</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control>
+                    <button nz-button nzType="primary" [disabled]="!validateForm.valid">添加</button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+
+    </div> -->
+    <nz-table nzBordered [nzData]="listOfData" #editRowTable (nzCurrentPageDataChange)="getPost">
+        <thead>
+            <tr>
+                <th nzWidth="120px">序号</th>
+                <th nzWidth="200px">岗位名称</th>
+                <th nzWidth="120px">级别数</th>
+                <th nzWidth="280px">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- editRowTable.data -->
+            <tr *ngFor="let data of editRowTable.data">
+
+                <td>
+                    <ng-container>
+                        {{ data.id }}
+                    </ng-container>
+                    <!-- <ng-template #ageInputTpl>
+                        <input type="text" nz-input [(ngModel)]="editCache[data.id].data.id" />
+                    </ng-template> -->
+                </td>
+                <td>
+                    <ng-container *ngIf="!editCache[data.id].edit; else nameInputTpl">
+                        {{ data.postname }}
+                    </ng-container>
+                    <ng-template #nameInputTpl>
+                        <input type="text" nz-input [(ngModel)]="editCache[data.id].data.postname" />
+                    </ng-template>
+                </td>
+
+                <td>
+                    <ng-container *ngIf="!editCache[data.id].edit; else addressInputTpl">
+                        {{ data.postrankcount}}
+                    </ng-container>
+                    <ng-template #addressInputTpl>
+                        <input type="text" nz-input [(ngModel)]="editCache[data.id].data.postrankcount" />
+                    </ng-template>
+                </td>
+                <td>
+                    <div class="editable-row-operations">
+                        <ng-container *ngIf="!editCache[data.id].edit; else saveTpl">
+                            <a (click)="startEdit(data.id)">编辑</a>
+                        </ng-container>
+                        <ng-template #saveTpl>
+                            <a (click)="saveEdit(data.id)">保存</a>
+                            <a nz-popconfirm nzTitle="Sure to cancel?" (nzOnConfirm)="cancelEdit(data.id)">取消</a>
+                        </ng-template>
+                    </div>
+                    <div class="dele">
+                        <a nz-popconfirm nzTitle="确定删除么?" (nzOnConfirm)="deleteRow(data.id)">删除</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+
+
+
+</div>
